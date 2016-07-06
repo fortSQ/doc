@@ -274,7 +274,7 @@ apt-get install php7.0 php7.0-fpm php7.0-mysql php7.0-mbstring phpmyadmin php-ge
 
 В **/etc/php/7.0/fpm/php.ini** раскомментить/заменить строки:
 
-```
+```ini
 short_open_tag = On
 display_errors = On
 display_startup_errors = On
@@ -291,7 +291,7 @@ apt-get install nginx
 
 Раскомментить в **/etc/nginx/nginx.conf** (типа когда доменов много):
 
-```
+```nginx
 server_names_hash_bucket_size 64;
 ```
 
