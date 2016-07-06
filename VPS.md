@@ -1,59 +1,125 @@
-Отредактировать репозиторий /etc/apt/sources.list на свежие релизы (stable > testing > unstable)
+# Настройка VPS
+
+Отредактировать репозиторий **/etc/apt/sources.list** на свежие релизы (*stable* > *testing* > *unstable*):
+
+```bash
 deb http://mirror.yandex.ru/debian unstable main contrib non-free
 deb-src http://mirror.yandex.ru/debian unstable main contrib non-free
-Также backports (свежие пакеты, но сама ветка ниже остальных по приоритету):
+```
+
+Также *backports* (свежие пакеты, но сама ветка ниже остальных по приоритету):
+
+```bash
 deb http://mirror.yandex.ru/debian jessie-backports main contrib
 deb-src http://mirror.yandex.ru/debian jessie-backports main contrib
-(установка пакетов с указанием ветки: apt-get -t jessie-backports install letsencrypt)
+```
+
+(установка пакетов с указанием ветки: `apt-get -t jessie-backports install letsencrypt`)
+
 также можно установить официальную репу сообщества по инструкции:
-https://www.dotdeb.org/instructions/
+https://www.dotdeb.org/instructions
+
+--
 
 Обновить список пакетов:
-apt-get update
 
-Обновить приложение по установке пакетов (убрать предупреждение Ignoring Provides line with DepCompareOp for package):
+```bash
+apt-get update
+```
+
+Обновить приложение по установке пакетов (убрать предупреждение *Ignoring Provides line with DepCompareOp for package*):
+
+```bash
 apt-get install apt
+```
 
 Обновить все пакеты в системе:
+
+```bash
 apt-get upgrade
+```
 
 Усовершенствованное обновление пакетов в системе (удалит старые пакеты, разрешит конфликты, доставит необходимые зависимости, доставит новые пакеты, если требуется):
+
+```bash
 apt-get dist-upgrade
+```
+
+--
 
 Установить проги:
+
+```bash
 apt-get install mc screen htop grc curl siege
+```
 
 Перезагружаемся для изменения ядра и другого софта:
+
+```bash
 reboot
+```
+
+--
 
 Смена часового пояса (проверка командой date):
+
+```bash
 rm /etc/localtime
 ln -s /usr/share/zoneinfo/Europe/Moscow /etc/localtime
+```
+
 или через помощника:
+
+```bash
 dpkg-reconfigure tzdata
+```
 
-256 цветов (корректное отображение mc) - добавить в /root/.bashrc:
+256 цветов (корректное отображение mc) - добавить в **/root/.bashrc**:
+
+```bash
 export TERM=xterm-256color
-и проверить через:
-tput colors
+```
 
-Полезные сокращения в /root/.bashrc:
+и проверить через:
+
+```bash
+tput colors
+```
+
+Полезные сокращения в **/root/.bashrc**:
 Раскрашивание shell (http://sudouser.com/ukrashaem-bash.html):
+
+```bash
 PS1='\[\033[0;40;1;36m\]\w\[\033[0;40;0;35m\]\$\[\033[0m\] '
+```
+
 Раскрашивание команд:
+
+```bash
 alias ping="grc ping -c 4"
 alias ls="grc ls -lA"
+```
+
 и просто синонимы:
+
+```bash
 alias nslookup+="nslookup -type=any"
 alias r="service php7.0-fpm restart; service nginx restart"
+```
 
 Поправить экран приветсвия:
-nano /etc/motd
 
-Ускоряем загрузку по SSH, дописав в /etc/ssh/sshd_config строчку:
-UseDNS no
+```bash
+nano /etc/motd
+```
+
+Ускоряем загрузку по SSH, дописав в **/etc/ssh/sshd_config** строчку:
+
+`UseDNS no`
+
 и расскоментив:
-GSSAPIAuthentication no
+
+`GSSAPIAuthentication no`
 
 Поддержка русских сиволов:
 dpkg-reconfigure locales
