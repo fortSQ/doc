@@ -191,20 +191,60 @@ apt-get install sysbench ioping
 ```
 
 И запускаем:
-> dd bs=1M count=512 if=/dev/zero of=test conv=fdatasync
+
+диска (копирование файла):
+
+```bash
+dd bs=1M count=512 if=/dev/zero of=test conv=fdatasync
+```
+
+```
 512+0 records in
 512+0 records out
 536870912 bytes (537 MB) copied, 3.2023 s, 168 MB/s
-> sysbench --test=cpu --cpu-max-prime=20000 run
+```
+
+процессора:
+
+```bash
+sysbench --test=cpu --cpu-max-prime=20000 run
+```
+
+```
 total time:                          28.7608s
-> sysbench --test=memory --memory-total-size=512M run
+```
+
+оперативки:
+
+```bash
+sysbench --test=memory --memory-total-size=512M run
+```
+
+```
 total time:                          0.5955s
-> ioping . -c 10
+```
+
+диска (операций чтения/записи):
+
+```bash
+ioping . -c 10
+```
+
+```
 10 requests completed in 9.01 s, 1.22 k iops, 4.76 MiB/s
 min/avg/max/mdev = 169 us / 819 us / 5.26 ms / 1.50 ms
-> wget cachefly.cachefly.net/100mb.test
+```
+
+канала:
+
+```bash
+wget cachefly.cachefly.net/100mb.test
+```
+
+```
 100mb.test          100%[=====================>] 100.00M  3.29MB/s   in 30s
 2016-06-28 11:32:18 (3.37 MB/s) - ‘100mb.test’ saved [104857600/104857600]
+```
 
 --
 
@@ -257,7 +297,7 @@ server_names_hash_bucket_size 64;
 
 Создать php-сниппет **/etc/nginx/snippets/php.conf**:
 
-```
+```nginx
 fastcgi_pass unix:/run/php/php7.0-fpm.sock;
 try_files $fastcgi_script_name =404;
 include fastcgi.conf;
@@ -265,7 +305,7 @@ include fastcgi.conf;
 
 И сам конфиг **/etc/nginx/sites-enabled/romanov-vrn**:
 
-```
+```nginx
 server {
         server_name romanov-vrn.ru *.romanov-vrn.ru;
         listen 80 default_server;
@@ -312,7 +352,7 @@ letsencrypt certonly -d benzo36.ru -d www.benzo36.ru
 
 дописать в nginx-конфиг сайта следующие строки:
 
-```
+```nginx
 listen 443 ssl;
 ssl_certificate /etc/letsencrypt/live/benzo36.ru/fullchain.pem;
 ssl_certificate_key /etc/letsencrypt/live/benzo36.ru/privkey.pem;
