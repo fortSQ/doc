@@ -1,4 +1,6 @@
-# Настройка VPS
+# VPS
+
+## Репозитории и начальный софт
 
 Отредактировать репозиторий **/etc/apt/sources.list** на свежие релизы (*stable* > *testing* > *unstable*):
 
@@ -18,8 +20,6 @@ deb-src http://mirror.yandex.ru/debian jessie-backports main contrib
 
 также можно установить официальную репу сообщества по инструкции:
 https://www.dotdeb.org/instructions
-
---
 
 Обновить список пакетов:
 
@@ -45,8 +45,6 @@ apt-get upgrade
 apt-get dist-upgrade
 ```
 
---
-
 Установить проги:
 
 ```bash
@@ -59,7 +57,7 @@ apt-get install mc screen htop grc curl siege
 reboot
 ```
 
---
+## Настройка системы
 
 Смена часового пояса (проверка командой date):
 
@@ -182,9 +180,7 @@ nameserver 2001:4860:4860::8888
 precedence ::ffff:0:0/96  100
 ```
 
---
-
-Тесты производительности:
+## Тесты производительности
 
 ```bash
 apt-get install sysbench ioping
@@ -246,7 +242,7 @@ wget cachefly.cachefly.net/100mb.test
 2016-06-28 11:32:18 (3.37 MB/s) - ‘100mb.test’ saved [104857600/104857600]
 ```
 
---
+## Серверные приложения
 
 MySQL (и сервер, и клиент):
 
