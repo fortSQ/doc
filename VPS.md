@@ -87,6 +87,7 @@ tput colors
 ```
 
 Полезные сокращения в **/root/.bashrc**:
+
 Раскрашивание shell (http://sudouser.com/ukrashaem-bash.html):
 
 ```bash
@@ -115,19 +116,37 @@ nano /etc/motd
 
 Ускоряем загрузку по SSH, дописав в **/etc/ssh/sshd_config** строчку:
 
-`UseDNS no`
+```
+UseDNS no
+```
 
 и расскоментив:
 
-`GSSAPIAuthentication no`
+```
+GSSAPIAuthentication no
+```
 
 Поддержка русских сиволов:
+
+```bash
 dpkg-reconfigure locales
-обязательно должен стоять ru_RU.UTF-8 и выбрать его по умолчанию; (! дальше уже неактуально) далее установить:
+```
+
+обязательно должен стоять `ru_RU.UTF-8` и выбрать его по умолчанию; (! дальше уже неактуально) далее установить:
+
+```bash
 apt-get install console-cyrillic
+```
+
 донастроить:
+
+```bash
 dpkg-reconfigure console-cyrillic
+```
+
 со следующими параметрами:
+
+```
 What virtual consoles do you use?                           -->  /dev/tty[1-6]
 Choose the keyboard layout                                  -->  Russian
 Toggling between Cyrillic and Latin characters              -->  Caps Lock
@@ -136,19 +155,41 @@ Choose a font for the console.                              -->  UniCyr
 What is your favourite font size?                           -->  14
 What is your encoding?                                      -->  UNICODE
 Do you want to setup Cyrillic on the console at boot-time?  -->  Yes
-перезагрузить систему и проверить командой:
-locale
+```
 
-Для возможного убыстрения cтавим DNS от Яндекса в /etc/resolv.conf:
+перезагрузить систему и проверить командой:
+
+```bash
+locale
+```
+
+Для возможного убыстрения cтавим DNS от Яндекса в **/etc/resolv.conf**:
+
+```
 nameserver 77.88.8.8
 nameserver 77.88.8.1
+```
+
 И для того, чтобы не тормозили IPv6, перед дописываем соответвующий DNS (пример от Google):
+
+```
 nameserver 2001:4860:4860::8888
+```
+
 Также можно установить по умолч. 4-ю версию в /etc/gai.conf раскомментить строчку:
+
+```
 precedence ::ffff:0:0/96  100
+```
+
+--
 
 Тесты производительности:
+
+```bash
 apt-get install sysbench ioping
+```
+
 И запускаем:
 > dd bs=1M count=512 if=/dev/zero of=test conv=fdatasync
 512+0 records in
@@ -165,31 +206,66 @@ min/avg/max/mdev = 169 us / 819 us / 5.26 ms / 1.50 ms
 100mb.test          100%[=====================>] 100.00M  3.29MB/s   in 30s
 2016-06-28 11:32:18 (3.37 MB/s) - ‘100mb.test’ saved [104857600/104857600]
 
+--
+
 MySQL (и сервер, и клиент):
+
+```bash
 apt-get install mysql-server
+```
+
 и при установке пароля для root, входить в клиент:
+
+```bash
 mysql -p
-также в файл /etc/mysql/mysql.conf.d/mysqld.cnf (мб /etc/mysql/my.cnf) после skip-external-locking добавить строчку:
+```
+
+также в файл **/etc/mysql/mysql.conf.d/mysqld.cnf** (мб **/etc/mysql/my.cnf**) после `skip-external-locking` добавить строчку:
+
+```
 skip-name-resolve
+```
 
 PHP и phpMyAdmin:
+
+```bash
 apt-get install php7.0 php7.0-fpm php7.0-mysql php7.0-mbstring phpmyadmin php-gettext
-В /etc/php/7.0/fpm/php.ini раскомментить/заменить строки:
+```
+
+В **/etc/php/7.0/fpm/php.ini** раскомментить/заменить строки:
+
+```
 short_open_tag = On
 display_errors = On
 display_startup_errors = On
 date.timezone = 'Europe/Moscow'
-то же самое сделать и в /etc/php/7.0/cli/php.ini (для запуска из консоли командой php)
+```
+
+то же самое сделать и в **/etc/php/7.0/cli/php.ini** (для запуска из консоли командой php)
 
 Nginx-сервер:
+
+```bash
 apt-get install nginx
-Раскомментить в /etc/nginx/nginx.conf (типа когда доменов много):
+```
+
+Раскомментить в **/etc/nginx/nginx.conf** (типа когда доменов много):
+
+```
 server_names_hash_bucket_size 64;
-Создать php-сниппет /etc/nginx/snippets/php.conf:
+```
+
+Создать php-сниппет **/etc/nginx/snippets/php.conf**:
+
+```
 fastcgi_pass unix:/run/php/php7.0-fpm.sock;
 try_files $fastcgi_script_name =404;
 include fastcgi.conf;
-И сам конфиг /etc/nginx/sites-enabled/romanov-vrn:
+```
+
+И сам конфиг **/etc/nginx/sites-enabled/romanov-vrn**:
+
+```
 server {
         server_name romanov-vrn.ru *.romanov-vrn.ru;
         listen 80 default_server;
@@ -222,28 +298,49 @@ server {
                 include snippets/php.conf;
         }
 }
+```
 
 Установка шифрованного соединения SSL - HTTPS:
+
+```bash
 apt-get install letsencrypt
 service nginx stop
 letsencrypt certonly -d benzo36.ru -d www.benzo36.ru
-выбрать пункт 2 (Automatically use a temporary webserver (standalone))
+```
+
+выбрать пункт 2 (*Automatically use a temporary webserver (standalone)*)
+
 дописать в nginx-конфиг сайта следующие строки:
+
+```
 listen 443 ssl;
 ssl_certificate /etc/letsencrypt/live/benzo36.ru/fullchain.pem;
 ssl_certificate_key /etc/letsencrypt/live/benzo36.ru/privkey.pem;
 if ($scheme = http) {
     return 307 https://$server_name$request_uri;
 }
+```
 
 Установка NodeJS:
+
+```bash
 apt-get install npm
+```
 
 Установка кеша Redis:
+
+```bash
 apt-get install redis-server
-зайти - команда redis-cli
+```
+
+зайти - команда `redis-cli`
 
 Установка БД mongo:
+
+```bash
 apt-get install mongodb
-создать каталог /data/db и запустить сервер командой mongod
-зайти - команда mongo
+```
+
+создать каталог **/data/db** и запустить сервер командой `mongod`
+
+зайти - команда `mongo`
