@@ -378,3 +378,13 @@ apt-get install mongodb
 создать каталог **/data/db** и запустить сервер командой `mongod`
 
 зайти - команда `mongo`
+
+# Сопровождение
+
+Обновление SSL-сертификатов:
+
+```bash
+service nginx stop
+letsencrypt renew
+service nginx stop
+```
