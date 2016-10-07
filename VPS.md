@@ -283,9 +283,11 @@ Nginx-сервер:
 apt-get install nginx
 ```
 
-Раскомментить в **/etc/nginx/nginx.conf** (типа когда доменов много):
+В **/etc/nginx/nginx.conf** добавить нормальную кодировку и раскомментить (типа когда доменов много):
 
 ```nginx
+charset UTF-8;
+
 server_names_hash_bucket_size 64;
 ```
 
