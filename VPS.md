@@ -388,5 +388,5 @@ apt-get install mongodb
 ```bash
 service nginx stop
 letsencrypt renew
-service nginx stop
+service nginx start
 ```
