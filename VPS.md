@@ -390,3 +390,51 @@ service nginx stop
 letsencrypt renew
 service nginx start
 ```
+
+# Отправка писем сервером
+
+Установка клиента для почтового сервера:
+
+```bash
+apt-get install ssmtp
+```
+
+Редактирование настроек в **/etc/ssmtp/ssmtp.conf**:
+
+```ini
+root=romanov-vrn@yandex.ru
+mailhub=smtp.yandex.ru:465
+UseTLS=YES
+AuthUser=romanov-vrn
+AuthPass=***
+```
+
+*** - пароль, сгенерированный для приложения из Яндекс.Паспорта (доступ к почте)
+
+Редактирование отправителей в **/etc/ssmtp/revaliases**:
+
+```
+root:romanov-vrn@yandex.ru:smtp.yandex.ru:465
+www-data:romanov-vrn@yandex.ru:smtp.yandex.ru:465
+```
+
+Смена имени отправителя письма (вместо *root* - *Веб-сервер*) в **/etc/passwd**:
+
+```
+root:x:0:0:root:/root:/bin/bash
+root:x:0:0:Веб-сервер:/root:/bin/bash
+```
+
+Тестовая отправка через PHP в терминале:
+
+```bash
+php -r 'mail("fortsq@gmail.com", "Тема", "Сообщение");'
+```
+
+или
+
+```bash
+ssmtp fortsq@gmail.com
+```
+
+далее пишем текст сообщения, и по комбинации `Ctrl + D` отправляем
